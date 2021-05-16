@@ -1,0 +1,102 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notonastaliqurdudraft.css);
+#ui{
+    padding:30px;
+    background-image: linear-gradient(to bottom right, #708ae9, #d5b4e1);
+    border-radius: 20px;
+    height: 400px;
+}
+h1{
+    color: blue;
+}
+#ui input{
+    border-radius: 10px;
+    border: 0px;
+    width: 300px;
+    margin-top: 20px;
+}
+#buttons{
+    text-align: center;
+    margin-top: 20px
+}
+button{
+    margin-right: 30px;
+    border-radius: 100px; 
+}
+.male{
+    pointer: cursor;
+    background-color: white;
+}
+.female{
+    pointer: cursor;
+    decorate: none;
+}
+.row a{
+    margin-top: 60px;
+}
+#des{
+    padding: 30px;
+    margin-top: 60px;
+}
+.testbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: inherit;
+    padding: 20px;
+}
+table, td {
+    border: 1px solid black;
+}
+#jumbo{
+    position: absolute;
+    left: 70px;
+    z-index: 1;
+    display: none;
+}
+#jumbo h3{
+    text-align: center;
+}
+#gen_des{
+	font-family: 'Noto Nastaliq Urdu Draft', serif;
+	line-height: 1.8;
+}
+#key_enter button{
+    margin-left: 310px;
+    width: 40px;
+    height: 40px;
+}
+#ui img{
+    border-radius: 15px;
+    height:80px;
+    margin:5px;
+    margin-left: 10px;
+}
+.slider {
+    -webkit-appearance: none;
+    width: auto;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }

@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{% block title %} Marketeer {% endblock %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  
+  {% block style %}
+  {% endblock %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    jQuery(function($){
+            $('.male').each(function(i){
+            $(this).click(function(){ $('#male_dd').eq(i).toggle();
+            $('#female_dd').eq(i).hide();
+            });
+           });
+       });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+    jQuery(function($){
+            $('.female').each(function(i){
+            $(this).click(function(){ $('#female_dd').eq(i).toggle();
+            $('#male_dd').eq(i).hide();
+            });
+           });
+       });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      jQuery(function($){
+        $('#show_desc').each(function(i){
+          $(this).click(function(){ $('#jumbo').eq(i).toggle();});
+        });
+      });
+    });
+    function runSpeechRecognition() {
+		        // get output div reference
+		        var output = document.getElementById("output");
+		        // get action element reference
+		        var action = document.getElementById("action");
+                // new speech recognition object
+                var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                var recognition = new SpeechRecognition();
+
+                // This runs when the speech recognition service starts
+                recognition.onstart = function() {
+                    action.innerHTML = "<small>listening, please speak...</small>";
+                };
+
+                recognition.onspeechend = function() {
+                    action.innerHTML = "<small>stopped listening, hope you are done...</small>";
+                    recognition.stop();
+                }
+
+                // This runs when the speech recognition service returns result
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    var confidence = event.results[0][0].confidence;
+                    document.getElementById('keywords').value = transcript;
+                };
+
+                 // start recognition
+                 recognition.start();
+	        }
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default" id="navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'home'%}">Marketeer</a>
+          </div>
+          {% if user.is_authenticated %}
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'pro_list' %}">Descriptions List</a></li>
+          </ul>
+          <ul class="dropdown nav navbar-nav navbar-right" id="dropdown">
+            <button class="btn btn-primary navbar-btn dropdown-toggle" type="button" data-toggle="dropdown">{{ user.username }}
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'password_change' %}">Change Password</a></li>
+              <li class="divider"></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </ul>
+          {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+          {% endif %}
+        </div>
+      </nav>
+    
+    <div class="container">
+      <div class="row">
+        {% block content %}
+
+        {% endblock %}    
+      </div>
+
+      {% block script %}
+      {% endblock %}
+
+</body>
+</html>

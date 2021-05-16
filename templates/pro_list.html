@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Product list
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-2"></div>
+    <div class="col-lg-7">
+        <h2>Descriptions list</h2>
+        <div class="descriptions">
+            <form action="/deleteDescription/{{ product.name }}" style="display:inline" method="post"></form>
+                {% csrf_token %}
+                {% for product in products %}
+                    <div class="description" style="border-bottom: 1px solid rgb(148, 147, 147); padding: 5px">        
+                        <h3>Brand name : {{ product.name }}</h3>
+                        <strong>Description : </strong><h4>{{ product.text }}</h4>
+                        <strong>Keywords : </strong><h4>{{ product.keywords }}</h4>    
+                        <!-- <input type="submit" class="btn btn-primary" value="Delete" style="margin-left: 575px;"/> -->
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-3"></div>
+{% endblock %}

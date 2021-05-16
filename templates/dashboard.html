@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+        <div class="jumbotron" id="jumbo">
+            <h2>Generated Descriptions</h2>
+            <div class="inner">
+                <div id="table">
+                    {% if gen %}
+                    <table>
+                        {% for r in gen %}
+                        <tr>
+                            {% for t in r %}
+                            <td>{{ t }}</td>
+                            {% endfor %}
+                            <td><a href="/save_description/" type="submit" class="btn btn-info">Save</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <h3 id="err_msg">No generated text to show</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <form action="/generate_description/" method="POST">
+            {% csrf_token %}
+            <div class="col-lg-6">
+                <h1>Marketeer</h1>
+                <div id="ui">
+                    <h3>Enter Information</h3>
+                    <div class="form-group" id="gender_dd">
+                        <lablel for="gender">Select gender : </lablel>
+                        <select id="gender" name="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="male_dd" style="display: none;">
+                        <label for="maledd">Male</label>
+                        <select id="maledd" name="male" size="">
+                            <option value="jacket">Jacket</option>
+                            <option value="short">Shorts</option>
+                            <option value="shirt">Shirt</option>
+                            <option value="shoes">Shoes</option>
+                            <option value="boots">Boots</option>
+                            <option value="coat">Coat</option>
+                            <option value="suit">Suit</option>
+                            <option value="blazer">Blazer</option>
+                            <option value="sandle">Sandle</option>
+                            <option value="swimwear">Swim Wear</option>
+                            <option value="trouser">Trouser</option>
+                            <option value="underwear">Underwear</option>
+                            <option value="hoodies">Hoodies</option>
+                            <option value="jeans">Jeans</option>
+                            <option value="nightwear">Nightwear</option>
+                            <option value="polo">Polos</option>
+                            <option value="sock">Socks</option>
+                            <option value="trainer">Trainer</option>
+                            <option value="t-shirt">T-Shirt</option>
+                            <option value="waist coat">Waist Coat</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="female_dd" style="display: none;">
+                        <label for="femaledd">Female</label>
+                        <select id="femaledd" name="female" size="">
+                            <option value="boot">Boots</option>
+                            <option value="shoe">Shoes</option>
+                            <option value="dress">Dress</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" id="name" name="name" placeholder="Enter Brand Name Here..." value="{{ name }}">
+                    </div>
+                    <div class="form-group" id="adj_dd">
+                        <label for="adj">Select Adjectives: </label>
+                        <select id="adj" name="adj" size="">
+                            <option value="red">Red</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="casual">Casual</option>
+                            <option value="striped">Striped</option>
+                            <option value="informal">Informal</option>
+                            <option value="formal">Formal</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="key_enter">
+                        <input type="text" class="form-control input-lg" id="keywords" name="keywords" placeholder="Enter Keywords Here..." value="{{ keywords }}">
+                        <label for="keywords"><button type="button" onclick="runSpeechRecognition()"><i class="fa fa-microphone"></i></button></label>
+                    </div>
+
+                    <!-- <div class="form-group" id="buttons">
+                            <h3>Select size of description generated</h3>
+                            <input type="range" class="slider" id="vol" name="range" min="0.5" max="1.8" value="1.0"><p>Characters : <span id="demo"></span></p>
+                    </div> -->
+                    <div class="row">
+                        <button href="/" type="submit" class="btn btn-info">Generate Description</button>
+                    </div>
+                    <div class="container">
+                        <a href="#" class="btn"><img src="{% static '/images/1.jpeg'%}" alt="#"></a>
+                        <a href="/translate/" class="btn"><img src="{% static '/images/2.jpeg'%}" alt="#"></a>
+                        <a class="btn" id="show_desc"><img src="{% static '/images/3.jpeg'%}" alt="#"></a>
+                        <a href="#" class="btn"><img src="{% static '/images/4.jpeg'%}" alt="#"></a>
+                    </div>
+                </div>
+            </div>   
+        </form>
+            <div class="col-lg-5">
+                <div id="des">
+                    <div class="form-group">
+                        <label for="gen_des" style="font-size:x-large;">Output</label>
+                        <textarea name="dec" id="gen_des" rows="15" cols="60" >
+                            {{ desc }}
+                            {{ translated_text }}
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+    
+{% endblock %}

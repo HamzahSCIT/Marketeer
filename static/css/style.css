@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+body{
+    background-image: url('../images/background.jpeg');
+    height: 100%;
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: cover;
+}
+h2{
+    color:blue;
+}
