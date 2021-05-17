@@ -17,6 +17,8 @@ from google_trans_new import google_translator
 import speech_recognition as sr
 
 from aitextgen import aitextgen
+from django.conf import settings
+import os
 
 gen = [[]]
 x = 0
@@ -83,14 +85,14 @@ def generate_description(request):
     if request.method == "POST":
         keywords = request.POST.get("keywords")
         brnd = request.POST.get("name")
-        length = request.POST.get("range")
-        category = request.POST.get("maledd")
+        category = request.POST.get("male")
         adj = request.POST.get("adj")
         
-        output_dir = 'accounts/GPT2NeoModels/MenModel'
-
+        output_dir = 'C:/Users/saad/Desktop/GPT2NeoModels/MenModel'
+        # output_dir = os.path.join(settings.FILES_DIR, 'MenModel')
+        print(category)
         if category == 'dress':
-            output_dir = 'accounts/GPT2NeoModels/WomenModel'
+            output_dir = 'C:/Users/saad/Desktop/GPT2NeoModels/WomenModel'
 
 
         ai = aitextgen(model_folder=output_dir, to_gpu=False)
@@ -116,7 +118,7 @@ def generate_description(request):
     gen.insert(x, [keywords, desc])
     x + 1
     print(gen)
-    context = {'desc': desc, "keywords":keywords, "name":brand, 'gen': gen}
+    context = {'desc': desc, "keywords":keywords, "name":brnd, 'gen': gen}
     return render(request, 'dashboard.html', context)
 
 
