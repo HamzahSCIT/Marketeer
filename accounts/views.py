@@ -9,13 +9,14 @@ from .forms import SignUpForm
 
 from django.views.decorators.csrf import csrf_exempt
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPT2Config, GPT2LMHeadModel
-from transformers import AdamW, get_linear_schedule_with_warmup
-import torch
-import random
+import numpy as np
 import re
+import csv
 from googletrans import Translator
 from google_trans_new import google_translator
 import speech_recognition as sr
+
+from aitextgen import aitextgen
 
 gen = [[]]
 x = 0
@@ -77,61 +78,40 @@ def generate_description(request):
     global category
     global male, female
 
+    
 
     if request.method == "POST":
         keywords = request.POST.get("keywords")
-        brand = request.POST.get("name")
+        brnd = request.POST.get("name")
         length = request.POST.get("range")
-        gender = request.POST.get("gender")
-        female = request.POST.get("female")
         category = request.POST.get("maledd")
         adj = request.POST.get("adj")
-        # if length == "short":
-        #       max_length = 50
-        #      length_penalty = 0.5
-        # else:
-            #    max_length = 300
-            #   length_penalty = 1.5
-        device = torch.device("cpu")
-        if gender == 'male':
-            output_dir = '/home/sam/python/30epochmodel'
-        elif gender == 'female':
-            output_dir = '/home/sam/python/femaleModel'
-        model = GPT2LMHeadModel.from_pretrained(output_dir)
-        tokenizer = GPT2Tokenizer.from_pretrained(output_dir)
-        model.to(device)
+        
+        output_dir = 'accounts/GPT2NeoModels/MenModel'
 
-        model.eval()
+        if category == 'dress':
+            output_dir = 'accounts/GPT2NeoModels/WomenModel'
 
-        txt = keywords + " " + adj 
 
-        prompt = "<|startoftext|>" + txt
+        ai = aitextgen(model_folder=output_dir, to_gpu=False)
+        
+        desc = ai.generate_one(
+            batch_size=5,
+            prompt=keywords,
+            max_length=256,
+            temperature=1.0,
+            top_p=0.9)
+        
+        if brnd is not None:
+            brands = []
+            with open('accounts/brands.csv', encoding="utf-8") as csvfile:
+                reader = csv.reader(csvfile, delimiter=',')
+                for row in reader:
+                    brands.append(row[0])  
 
-        generated = torch.tensor(tokenizer.encode(prompt)).unsqueeze(0)
-        generated = generated.to(device)
-
-        print(generated)
-
-        sample_outputs = model.generate(
-            generated,
-            bos_token_id=random.randint(1, 30000),
-            do_sample=True,
-            top_k=60,
-            max_length=300,
-            top_p=0.65,
-            num_return_sequences=1,
-            length_penalty=length
-        )
-
-        for i, sample_output in enumerate(sample_outputs):
-            desc = tokenizer.decode(sample_output, skip_special_tokens=True)
-
-        if brand is not None:
-            desc = multi_sub([(r'\sBRANDNAME\'s\s|\sBRANDNAME\'s$|^BRANDNAME\'s\s', ' ' + brand + '\'s '),
-                                (r'\sBRANDNAME\'\s|\sBRANDNAME\'$|^BRANDNAME\'\s', ' ' + brand + '\'s '),
-                                (r'\sBRANDNAME\s|\sBRANDNAME$|^BRANDNAME\s', ' ' + brand + ' '),
-                                (r'\sAmerican\s|\sAmerican$|^American\s', ' Pakistani '), ],
-                                desc)
+            for brand in brands:
+                desc = re.sub(' ' + brand + ' ', ' ' + brnd + ' ', desc)
+            
 
     gen.insert(x, [keywords, desc])
     x + 1
@@ -176,7 +156,7 @@ def speech_to_text():
             text = r.recognize_google(audio)
             print('You said : {} '.format(text))
         except:
-            print('Sorry could not recognize your voice')
+            print('Sorry I could not recognize your voice')
 
 @login_required
 def product_list(request):
